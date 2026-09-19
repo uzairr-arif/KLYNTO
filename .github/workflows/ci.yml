@@ -28,31 +28,64 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # Chrome: build → verify → package (dist holds the chrome manifest here)
       - name: Build (chrome)
         run: npm run build:chrome
 
-      - name: Build (firefox, experimental)
-        run: npm run build:firefox
-
-      - name: Verify manifest + entries exist
+      - name: Verify chrome manifest + entries exist
         run: |
           node -e "
             const m = require('./dist/manifest.json');
             const fs = require('fs');
-            for (const key of [m.action.default_popup, m.options_page, m.devtools_page, m.background.service_worker]) {
-              if (!fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
+            const entries = [
+              m.action.default_popup,
+              m.options_page,
+              m.devtools_page,
+              m.background.service_worker,
+              ...Object.values(m.icons),
+            ];
+            for (const key of entries) {
+              if (!key || !fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
             }
-            for (const icon of Object.values(m.icons)) {
-              if (!fs.existsSync('dist/' + icon)) throw new Error('missing dist/' + icon);
+            if (m.background.service_worker !== 'background/service-worker.js') {
+              throw new Error('chrome manifest is missing the service worker entry');
             }
-            console.log('manifest OK:', m.name, m.version);
+            console.log('chrome manifest OK:', m.name, m.version);
           "
 
-      - name: Package ZIP
-        run: npm run package
+      - name: Package chrome ZIP
+        run: npm run package -- --target chrome
+
+      # Firefox: build → verify → package (dist holds the firefox manifest here)
+      - name: Build (firefox, experimental)
+        run: npm run build:firefox
+
+      - name: Verify firefox manifest + entries exist
+        run: |
+          node -e "
+            const m = require('./dist/manifest.json');
+            const fs = require('fs');
+            const entries = [
+              m.action.default_popup,
+              m.options_page,
+              m.devtools_page,
+              ...(m.background.scripts || []),
+              ...Object.values(m.icons),
+            ];
+            for (const key of entries) {
+              if (!key || !fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
+            }
+            if (!Array.isArray(m.background.scripts) || m.background.scripts.length === 0) {
+              throw new Error('firefox manifest is missing background scripts');
+            }
+            console.log('firefox manifest OK:', m.name, m.version);
+          "
+
+      - name: Package firefox ZIP
+        run: npm run package -- --target firefox
 
       - uses: actions/upload-artifact@v4
         with:
-          name: klynto-chrome
+          name: klynto-extension-zips
           path: releases/*.zip
           retention-days: 14
