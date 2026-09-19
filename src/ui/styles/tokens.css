@@ -1,0 +1,80 @@
+/* Klynto design tokens - dark-first developer security console.
+   Aesthetic: Chrome DevTools × Linear × Vercel. No neon, no hacker graphics. */
+
+:root {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, 'Cascadia Code', 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 13px;
+  --text-lg: 15px;
+  --text-xl: 18px;
+
+  --severity-high: #ef4444;
+  --severity-warning: #f59e0b;
+  --severity-review: #eab308;
+  --severity-info: #3b82f6;
+  --severity-pass: #10b981;
+  --severity-na: #71717a;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme='dark'] {
+  --bg-0: #0a0d12;
+  --bg-1: #10141b;
+  --bg-2: #151b25;
+  --bg-3: #1c2330;
+  --bg-inverse: #e7ecf3;
+  --border-0: #1d2431;
+  --border-1: #29323f;
+  --text-0: #e7ecf3;
+  --text-1: #9aa7ba;
+  --text-2: #64707f;
+  --accent: #2dd4bf;
+  --accent-strong: #5eead4;
+  --accent-contrast: #062b26;
+  --accent-dim: rgba(45, 212, 191, 0.12);
+  --link: #7dd3fc;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 12px 32px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg-0: #f5f6f8;
+  --bg-1: #ffffff;
+  --bg-2: #eef0f4;
+  --bg-3: #e4e8ee;
+  --bg-inverse: #111827;
+  --border-0: #e3e7ee;
+  --border-1: #d2d9e3;
+  --text-0: #0f172a;
+  --text-1: #4b5563;
+  --text-2: #8b94a3;
+  --accent: #0d9488;
+  --accent-strong: #0f766e;
+  --accent-contrast: #ffffff;
+  --accent-dim: rgba(13, 148, 136, 0.1);
+  --link: #0369a1;
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-2: 0 12px 32px rgba(15, 23, 42, 0.12);
+  color-scheme: light;
+}
