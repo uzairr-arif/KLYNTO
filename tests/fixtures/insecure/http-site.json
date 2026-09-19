@@ -1,0 +1,9 @@
+{
+  "url": "http://example.com/",
+  "status": 200,
+  "headers": [
+    { "name": "Content-Type", "value": "text/html; charset=utf-8" },
+    { "name": "Server", "value": "Apache/2.4.57" },
+    { "name": "X-Powered-By", "value": "PHP/8.2.0" }
+  ]
+}

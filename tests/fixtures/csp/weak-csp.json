@@ -1,0 +1,15 @@
+{
+  "url": "https://example.com/",
+  "status": 200,
+  "headers": [
+    { "name": "Content-Type", "value": "text/html; charset=utf-8" },
+    { "name": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+    {
+      "name": "Content-Security-Policy",
+      "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' data:; object-src 'self'"
+    },
+    { "name": "X-Content-Type-Options", "value": "nosniff" },
+    { "name": "X-Frame-Options", "value": "DENY" },
+    { "name": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+  ]
+}

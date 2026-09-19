@@ -1,0 +1,11 @@
+{
+  "url": "https://api.example.com/v1/users",
+  "status": 200,
+  "headers": [
+    { "name": "Content-Type", "value": "application/json" },
+    { "name": "Access-Control-Allow-Origin", "value": "*" },
+    { "name": "Access-Control-Allow-Credentials", "value": "true" },
+    { "name": "Access-Control-Allow-Methods", "value": "GET, POST, *" },
+    { "name": "Access-Control-Expose-Headers", "value": "X-Request-Id" }
+  ]
+}

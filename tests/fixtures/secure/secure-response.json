@@ -1,0 +1,19 @@
+{
+  "url": "https://example.com/",
+  "status": 200,
+  "headers": [
+    { "name": "Content-Type", "value": "text/html; charset=utf-8" },
+    { "name": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+    {
+      "name": "Content-Security-Policy",
+      "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests; report-uri https://example.com/csp-report"
+    },
+    { "name": "X-Content-Type-Options", "value": "nosniff" },
+    { "name": "X-Frame-Options", "value": "DENY" },
+    { "name": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+    { "name": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+    { "name": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+    { "name": "Cross-Origin-Embedder-Policy", "value": "require-corp" },
+    { "name": "Server", "value": "nginx" }
+  ]
+}

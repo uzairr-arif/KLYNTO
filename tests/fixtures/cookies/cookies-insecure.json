@@ -1,0 +1,18 @@
+{
+  "url": "https://app.example.com/",
+  "status": 200,
+  "headers": [
+    { "name": "Content-Type", "value": "text/html; charset=utf-8" },
+    { "name": "Strict-Transport-Security", "value": "max-age=31536000" },
+    {
+      "name": "Content-Security-Policy",
+      "value": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
+    },
+    { "name": "X-Content-Type-Options", "value": "nosniff" },
+    { "name": "X-Frame-Options", "value": "SAMEORIGIN" },
+    { "name": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+    { "name": "Set-Cookie", "value": "sessionId=abc123; Domain=example.com; Max-Age=63072000; Path=/" },
+    { "name": "Set-Cookie", "value": "theme=dark; Secure; HttpOnly; SameSite=Lax" },
+    { "name": "Set-Cookie", "value": "__Host-remember=1; Secure" }
+  ]
+}
