@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Generates Klynto raster assets from the vector mark:
- *   public/icons/icon-{16,32,48,128}.png      (shipped with the extension)
- *   stores/assets/                            (store-submission only, not shipped)
+ *   public/icons/icon-{16,32,48,128}.png   (shipped with the extension)
+ *   public/icons/mark.svg                  (brand source, kept in the repo)
+ *   stores/assets/                         (store-submission only, not shipped)
  *
  * Usage: node scripts/icons.mjs
  */
@@ -67,11 +68,13 @@ for (const size of [16, 32, 48, 128]) {
 }
 
 // Store-submission assets (kept out of the shipped extension package):
-// listing icon required by the Chrome Web Store, plus the 440x280 promo tile
-// and the SVG sources for future edits.
+// listing icon required by the Chrome Web Store, the 440x280 promo tile and
+// its editable SVG source.
 await sharp(mark).resize(128, 128).png().toFile(resolve(storeAssetsDir, 'store-icon-128.png'));
 await sharp(Buffer.from(PROMO)).png().toFile(resolve(storeAssetsDir, 'promo-tile-440x280.png'));
-console.log('store assets: store-icon-128.png, promo-tile-440x280.png');
-writeFileSync(resolve(storeAssetsDir, 'mark.svg'), MARK);
 writeFileSync(resolve(storeAssetsDir, 'promo.svg'), PROMO);
+console.log('store assets: store-icon-128.png, promo-tile-440x280.png, promo.svg');
+
+// Brand source lives in the repo so contributors can edit and regenerate it.
+writeFileSync(resolve(iconsDir, 'mark.svg'), MARK);
 console.log('done');
