@@ -17,11 +17,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["chrome", "vite/client"],
-    "baseUrl": ".",
     "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@core/*": ["src/core/*"],
-      "@ui/*": ["src/ui/*"]
+      "@shared/*": ["./src/shared/*"],
+      "@core/*": ["./src/core/*"],
+      "@ui/*": ["./src/ui/*"]
     },
     "noEmit": true
   },
