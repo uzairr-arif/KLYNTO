@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   base: './',
   resolve: {
@@ -18,7 +18,9 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
+    // Watch rebuilds must not wipe dist/ — the manifest would disappear and
+    // Chrome would disable the unpacked extension.
+    emptyOutDir: mode !== 'watch',
     target: 'chrome116',
     rollupOptions: {
       input: {
@@ -43,4 +45,4 @@ export default defineConfig({
     include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
     environment: 'node',
   },
-});
+}));

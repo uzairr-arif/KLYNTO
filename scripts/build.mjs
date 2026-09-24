@@ -109,13 +109,23 @@ if (!existsSync(dist)) mkdirSync(dist, { recursive: true });
 writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
 
 if (watch) {
-  console.log('[klynto] watch mode: building pages + service worker with vite --watch');
+  // Watch mode: do one full clean build first (which writes a valid manifest),
+  // then start the watchers with emptyOutDir disabled so rebuilds never wipe
+  // dist/ — Chrome would disable the unpacked extension if the manifest
+  // vanished between rebuilds.
+  console.log('[klynto] watch: initial clean build…');
+  runVite(['--config', 'vite.config.ts']);
+  runVite(['--config', 'vite.sw.config.ts']);
+  writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
+  console.log('[klynto] watch mode: rebuilding on change (dist is not wiped between rebuilds)');
   spawn(
     process.execPath,
     [
       resolve(root, 'node_modules/vite/bin/vite.js'),
       'build',
       '--watch',
+      '--mode',
+      'watch',
       '--config',
       'vite.config.ts',
     ],
@@ -127,6 +137,8 @@ if (watch) {
       resolve(root, 'node_modules/vite/bin/vite.js'),
       'build',
       '--watch',
+      '--mode',
+      'watch',
       '--config',
       'vite.sw.config.ts',
     ],
