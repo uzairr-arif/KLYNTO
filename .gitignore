@@ -5,9 +5,12 @@ coverage/
 *.log
 .DS_Store
 
-# Local-only: publishing kit and personal files (kept out of the public repo)
+# Local-only: publishing kit, demo tooling and personal files (kept out of the public repo)
 /docs/publishing.md
 /stores/
 /klynto-sgo-*.md
 .zcode/
 .zcodeignore
+demo-dist/
+/demo/
+/vite.demo.config.ts
