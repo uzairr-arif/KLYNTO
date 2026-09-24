@@ -15,12 +15,14 @@ export function SettingsView({ standalone = false }: { standalone?: boolean }) {
 
   const reloadGrants = () => {
     void browserApi.grantedHosts().then((patterns) => {
-      setGrantedHosts(
-        patterns
-          .map(hostFromOriginPattern)
-          .filter((h): h is string => h !== null)
-          .sort(),
-      );
+      // Each granted site contributes two patterns (http + https); show the
+      // host once.
+      const hosts = new Set<string>();
+      for (const pattern of patterns) {
+        const host = hostFromOriginPattern(pattern);
+        if (host) hosts.add(host);
+      }
+      setGrantedHosts([...hosts].sort());
     });
   };
 
