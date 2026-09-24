@@ -66,11 +66,17 @@ export function diffScans(a: ScanResult, b: ScanResult): FindingDiff[] {
     const current = fb?.severity;
     let kind: FindingDiff['kind'] = 'same';
     if (prev !== current) {
-      const rankPrev = prev ? SEVERITY_RANK[prev] : -1;
-      const rankCurrent = current ? SEVERITY_RANK[current] : -1;
-      if (rankCurrent > rankPrev) kind = 'regression';
-      else if (rankCurrent < rankPrev) kind = 'improvement';
-      else kind = 'changed';
+      if (!prev || !current) {
+        // A rule that stopped (or started) being evaluated is a neutral change,
+        // not an improvement or regression.
+        kind = 'changed';
+      } else {
+        const rankPrev = SEVERITY_RANK[prev];
+        const rankCurrent = SEVERITY_RANK[current];
+        if (rankCurrent > rankPrev) kind = 'regression';
+        else if (rankCurrent < rankPrev) kind = 'improvement';
+        else kind = 'changed';
+      }
     }
     diffs.push({
       ruleId,
