@@ -169,6 +169,12 @@ export function SettingsView({ standalone = false }: { standalone?: boolean }) {
           <button
             className="btn btn-sm"
             onClick={async () => {
+              // Firefox manages host permissions in about:addons.
+              if (browserApi.isFirefox()) {
+                await browserApi.openAboutAddons();
+                flash('Firefox: enable site access in the Permissions tab of Klynto.');
+                return;
+              }
               await browserApi.requestOrigins(['http://*/*', 'https://*/*']);
               reloadGrants();
             }}

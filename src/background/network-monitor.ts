@@ -60,7 +60,9 @@ export class NetworkMonitor {
 
   start(): void {
     const filter = { urls: ['http://*/*', 'https://*/*'] };
-    // 'extraHeaders' is required in MV3 to observe Set-Cookie.
+    // 'extraHeaders' is required in MV3 (Chromium) to observe Set-Cookie.
+    // Some Firefox versions reject unknown extraInfoSpec values, so listener
+    // registration degrades gracefully to plain response headers.
     const redirectSpec: chrome.webRequest.OnBeforeRedirectOptions[] = [
       chrome.webRequest.OnBeforeRedirectOptions.RESPONSE_HEADERS,
       chrome.webRequest.OnBeforeRedirectOptions.EXTRA_HEADERS,
@@ -70,16 +72,27 @@ export class NetworkMonitor {
       chrome.webRequest.OnCompletedOptions.EXTRA_HEADERS,
     ];
 
-    chrome.webRequest.onBeforeRedirect.addListener(
-      (details) => this.handleBeforeRedirect(details),
-      filter,
-      redirectSpec,
-    );
-    chrome.webRequest.onCompleted.addListener(
-      (details) => this.handleCompleted(details),
-      filter,
-      completedSpec,
-    );
+    try {
+      chrome.webRequest.onBeforeRedirect.addListener(
+        (details) => this.handleBeforeRedirect(details),
+        filter,
+        redirectSpec,
+      );
+      chrome.webRequest.onCompleted.addListener(
+        (details) => this.handleCompleted(details),
+        filter,
+        completedSpec,
+      );
+    } catch {
+      chrome.webRequest.onBeforeRedirect.addListener(
+        (details) => this.handleBeforeRedirect(details),
+        filter,
+      );
+      chrome.webRequest.onCompleted.addListener(
+        (details) => this.handleCompleted(details),
+        filter,
+      );
+    }
     chrome.webRequest.onErrorOccurred.addListener((details) => this.handleError(details), filter);
   }
 

@@ -64,17 +64,26 @@ function buildManifest(targetName) {
 
   if (targetName === 'firefox') {
     // Experimental Firefox target (MV3 event page instead of service worker).
+    // - background.scripts without `type: 'module'`: the Firefox build bundles
+    //   the worker as an IIFE classic script (see vite.sw.config.ts).
+    // - options_ui: Firefox's supported options-page key.
+    // - strict_min_version 128: optional_host_permissions + storage.session era.
+    const sharedWithoutOptionsPage = { ...shared };
+    delete sharedWithoutOptionsPage.options_page;
     return {
-      ...shared,
+      ...sharedWithoutOptionsPage,
       browser_specific_settings: {
         gecko: {
           id: 'klynto@klynto.dev',
-          strict_min_version: '115.0',
+          strict_min_version: '128.0',
         },
       },
       background: {
         scripts: ['background/service-worker.js'],
-        type: 'module',
+      },
+      options_ui: {
+        page: 'options.html',
+        open_in_tab: true,
       },
       optional_host_permissions: ['http://*/*', 'https://*/*'],
     };
@@ -115,7 +124,7 @@ if (watch) {
   // vanished between rebuilds.
   console.log('[klynto] watch: initial clean build…');
   runVite(['--config', 'vite.config.ts']);
-  runVite(['--config', 'vite.sw.config.ts']);
+  runVite(['--config', 'vite.sw.config.ts', '--mode', target === 'firefox' ? 'firefox' : 'production']);
   writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
   console.log('[klynto] watch mode: rebuilding on change (dist is not wiped between rebuilds)');
   spawn(
@@ -138,7 +147,7 @@ if (watch) {
       'build',
       '--watch',
       '--mode',
-      'watch',
+      target === 'firefox' ? 'firefox' : 'watch',
       '--config',
       'vite.sw.config.ts',
     ],
@@ -148,7 +157,7 @@ if (watch) {
   console.log('[klynto] building pages…');
   runVite(['--config', 'vite.config.ts']);
   console.log('[klynto] building service worker…');
-  runVite(['--config', 'vite.sw.config.ts']);
+  runVite(['--config', 'vite.sw.config.ts', '--mode', target === 'firefox' ? 'firefox' : 'production']);
   writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
   console.log(`[klynto] done → dist/ (target: ${target}, v${pkg.version})`);
 }

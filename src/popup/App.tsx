@@ -64,6 +64,11 @@ export function App() {
   }, [evaluate]);
 
   const grantAndScan = useCallback(async (host: string) => {
+    // Firefox manages host permissions in about:addons, not via request().
+    if (browserApi.isFirefox()) {
+      await browserApi.openAboutAddons();
+      return;
+    }
     const granted = await browserApi.requestOrigins(originPatternsForHost(host));
     if (!granted) return;
     const tab = await browserApi.getActiveTab();
@@ -144,8 +149,14 @@ export function App() {
               Settings.
             </p>
             <button className="btn btn-primary" onClick={() => void grantAndScan(state.host)}>
-              Enable inspection
+              {browserApi.isFirefox() ? 'Open permission settings' : 'Enable inspection'}
             </button>
+            {browserApi.isFirefox() && (
+              <p className="xs faint" style={{ maxWidth: 280, textAlign: 'center' }}>
+                Firefox grants site access per extension: in the Permissions tab, allow access for
+                the sites you want to inspect, then reopen Klynto.
+              </p>
+            )}
             <p className="xs faint" style={{ maxWidth: 280, textAlign: 'center' }}>
               No data ever leaves your browser. Klynto has no servers and no telemetry.
             </p>

@@ -71,7 +71,9 @@ export function BatchView() {
         setState((prev) => ({
           ...prev,
           notice:
-            'Site access was not granted - Klynto can only observe responses for origins you approve. Nothing was scanned.',
+            browserApi.isFirefox()
+            ? 'Firefox grants site access per extension: enable access for Klynto in about:addons (Permissions tab), then run the batch again. Nothing was scanned.'
+            : 'Site access was not granted - Klynto can only observe responses for origins you approve. Nothing was scanned.',
         }));
         return;
       }

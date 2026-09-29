@@ -40,9 +40,32 @@ function kvFromArea(area: StorageAreaLike): KVStore {
   };
 }
 
+/** Firefox does not ship chrome.storage.session in all versions; degrade to an
+ *  in-memory KV so live per-tab evidence simply resets when the worker sleeps. */
+function memoryKv(): KVStore {
+  const map = new Map<string, unknown>();
+  return {
+    async get<T>(key: string): Promise<T | undefined> {
+      return map.get(key) as T | undefined;
+    },
+    async set(key: string, value: unknown): Promise<void> {
+      map.set(key, value);
+    },
+    async remove(key: string): Promise<void> {
+      map.delete(key);
+    },
+  };
+}
+
 export const browserApi = {
   isChromium(): boolean {
     return typeof chrome !== 'undefined' && !!chrome.runtime?.id;
+  },
+
+  isFirefox(): boolean {
+    return (
+      typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent)
+    );
   },
 
   storageLocal(): KVStore {
@@ -50,7 +73,8 @@ export const browserApi = {
   },
 
   storageSession(): KVStore {
-    return kvFromArea(chrome.storage.session as unknown as StorageAreaLike);
+    const area = (chrome.storage as Partial<Record<'session', StorageAreaLike>>).session;
+    return area ? kvFromArea(area) : memoryKv();
   },
 
   extensionVersion(): string {
@@ -96,7 +120,10 @@ export const browserApi = {
     }
   },
 
-  /** Permission helpers - called from extension pages with a user gesture. */
+  /** Permission helpers - called from extension pages with a user gesture.
+   *  Firefox does not grant host permissions via permissions.request(); there
+   *  they are toggled per-extension in about:addons, so request failures are
+   *  reported as `false` and the UI guides the user to the settings page. */
   async hasOrigins(origins: string[]): Promise<boolean> {
     if (origins.length === 0) return true;
     return chrome.permissions.contains({ origins });
@@ -104,12 +131,25 @@ export const browserApi = {
 
   async requestOrigins(origins: string[]): Promise<boolean> {
     if (origins.length === 0) return true;
-    return chrome.permissions.request({ origins });
+    try {
+      return await chrome.permissions.request({ origins });
+    } catch {
+      return false;
+    }
   },
 
   async removeOrigins(origins: string[]): Promise<boolean> {
     if (origins.length === 0) return true;
     return chrome.permissions.remove({ origins });
+  },
+
+  /** Firefox path: open the extension's permission settings. */
+  async openAboutAddons(): Promise<void> {
+    try {
+      await chrome.tabs.create({ url: 'about:addons' });
+    } catch {
+      // ignore - user can open it manually
+    }
   },
 
   async grantedHosts(): Promise<string[]> {
