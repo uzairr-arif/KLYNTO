@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Klynto</title>
+    <meta name="description" content="Klynto privacy policy: local-only data, per-site optional permissions, no telemetry, no third parties." />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <link rel="stylesheet" href="./assets/site.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./">
+          <img src="./assets/mark.svg" width="26" height="26" alt="Klynto logo" />
+          <span>KLYNTO</span>
+        </a>
+        <nav class="nav">
+          <a href="./">Home</a>
+          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="policy">
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: September 2026</p>
+
+      <p>
+        Klynto is a browser extension ("the extension") that inspects web security signals.
+        This policy describes exactly what the extension and this website do with data. Short
+        version: <strong>they do not collect, transmit or sell any data.</strong>
+      </p>
+
+      <h2>Data collection</h2>
+      <p>The extension does <strong>not</strong> collect, store remotely, or transmit:</p>
+      <ul>
+        <li>browsing history</li>
+        <li>page content, headers, or cookies</li>
+        <li>scan results</li>
+        <li>personal information</li>
+        <li>analytics or telemetry of any kind</li>
+      </ul>
+      <p>
+        All analysis is performed locally in your browser. All results are stored only in your
+        browser profile's local extension storage, on your device. There is no backend server,
+        no account system, and no third-party code that phones home. This website is fully
+        static: no cookies, no analytics, no trackers, no JavaScript.
+      </p>
+
+      <h2>Permissions</h2>
+      <p>The extension requests the minimum permissions required:</p>
+      <ul>
+        <li>
+          <strong>storage</strong> — to save your scan history and settings locally on your
+          device.
+        </li>
+        <li>
+          <strong>webRequest</strong> — to observe response headers of pages you have granted
+          access to. The extension never blocks or modifies web requests.
+        </li>
+        <li>
+          <strong>activeTab</strong> — to read the address of the page you invoked the
+          extension on.
+        </li>
+        <li>
+          <strong>contextMenus</strong> — to provide the "Inspect security with Klynto"
+          right-click entry.
+        </li>
+        <li>
+          <strong>Optional host permissions</strong> — access is requested <strong>per
+          site</strong> when you choose to inspect a domain ("Enable inspection" in the
+          popup), or for all sites only if you explicitly opt in from the extension's
+          Settings. In Firefox, host permissions are managed per extension in
+          <em>about:addons</em>. You may revoke access at any time. Without this grant, the
+          extension cannot observe any site's responses.
+        </li>
+      </ul>
+
+      <h2>Data retention and deletion</h2>
+      <p>
+        Scan history and settings remain on your device until you delete them (Settings →
+        Clear history &amp; batch data) or uninstall the extension, which removes all stored
+        data.
+      </p>
+
+      <h2>Third parties</h2>
+      <p>None. The extension and this website contain no external scripts, trackers, CDNs or APIs.</p>
+
+      <h2>Changes</h2>
+      <p>
+        If this policy ever changes, the change will be documented in the extension's
+        changelog and release notes. The local-first default will not change silently.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Open an issue on the project's
+        <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">GitHub repository</a>
+        for any privacy questions.
+      </p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span class="muted">© 2026 Klynto · MIT License</span>
+        <span class="faint">This website collects nothing.</span>
+        <span class="links">
+          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">Source</a>
+          <a href="./">Home</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

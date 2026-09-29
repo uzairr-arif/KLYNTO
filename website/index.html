@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Klynto — Web Security Inspector & Developer Toolkit</title>
+    <meta
+      name="description"
+      content="Inspect. Understand. Fix. A local-first browser extension for developers: 60 security checks across headers, CSP, cookies, CORS, transport and more. All analysis runs in your browser — no servers, no telemetry."
+    />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <link rel="stylesheet" href="./assets/site.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Klynto — Web Security Inspector & Developer Toolkit" />
+    <meta
+      property="og:description"
+      content="Inspect. Understand. Fix. 60 security checks, explained with actionable fixes. Local-first: no servers, no telemetry."
+    />
+    <meta property="og:image" content="./assets/og.png" />
+  </head>
+  <body>
+    <!--
+      STORE LINKS: the buttons below point to the store homepages until the
+      listings are approved. Replace each href with the real item URL, e.g.
+      https://chromewebstore.google.com/detail/<id>
+      https://microsoftedge.microsoft.com/addons/detail/<id>
+      https://addons.mozilla.org/firefox/addon/<slug>
+    -->
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./">
+          <img src="./assets/mark.svg" width="26" height="26" alt="Klynto logo" />
+          <span>KLYNTO</span>
+        </a>
+        <nav class="nav">
+          <a href="#features">Features</a>
+          <a href="#screenshots">Screenshots</a>
+          <a href="#privacy">Privacy</a>
+          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container hero">
+        <img src="./assets/icon-128.png" width="84" height="84" alt="Klynto app icon" />
+        <h1>Inspect. Understand. Fix.</h1>
+        <p class="tagline">Web Security Inspector &amp; Developer Toolkit</p>
+        <p class="lede">
+          Klynto inspects the security configuration of the pages you build — HTTP headers, CSP,
+          cookies, CORS, transport and more — explains every finding in plain words, and hands you
+          a fix for your stack. All analysis runs in your browser.
+        </p>
+        <div class="cta-row">
+          <a class="btn-store" href="https://chromewebstore.google.com/">Add to Chrome</a>
+          <a class="btn-store" href="https://microsoftedge.microsoft.com/addons">Add to Edge</a>
+          <a class="btn-ghost" href="https://addons.mozilla.org/">Firefox Add-ons</a>
+        </div>
+        <p class="promise">Free &amp; open source (MIT) · Works in Chrome, Edge, Brave and other Chromium browsers</p>
+        <div class="badge-row">
+          <span class="pill">60 rules</span>
+          <span class="pill">8 modules</span>
+          <span class="pill">no servers</span>
+          <span class="pill">no telemetry</span>
+          <span class="pill">no accounts</span>
+        </div>
+      </div>
+
+      <section id="features">
+        <div class="container">
+          <h2 class="section-title">Not just “missing header”. Actual understanding.</h2>
+          <p class="section-lede">
+            Every finding answers the three questions that matter, with copy-paste fixes for your
+            stack — Express, Next.js, NGINX, Apache, WordPress, PHP, Cloudflare and Django — and
+            links to MDN and OWASP.
+          </p>
+          <div class="questions">
+            <div class="card">
+              <p class="q">What does this mean?</p>
+              <p>
+                Findings explain the security concept behind them — no jargon walls, no crying
+                wolf. Legacy headers are informational, context matters.
+              </p>
+            </div>
+            <div class="card">
+              <p class="q">Why does it matter?</p>
+              <p>
+                Each finding states its real impact, so you can prioritize what actually deserves
+                your time instead of chasing a fake score.
+              </p>
+            </div>
+            <div class="card">
+              <p class="q">What do I do about it?</p>
+              <p>
+                The Fix Center provides per-platform starting points with one-click copy, clearly
+                labeled for review before use.
+              </p>
+            </div>
+          </div>
+
+          <div class="modules" style="margin-top: 32px">
+            <div class="module"><span class="name">Transport</span><span class="count">5 rules</span></div>
+            <div class="module"><span class="name">HTTP Headers</span><span class="count">16 rules</span></div>
+            <div class="module"><span class="name">Content Security Policy</span><span class="count">13 rules</span></div>
+            <div class="module"><span class="name">Cookies</span><span class="count">9 rules</span></div>
+            <div class="module"><span class="name">CORS</span><span class="count">5 rules</span></div>
+            <div class="module"><span class="name">Cross-Origin Isolation</span><span class="count">4 rules</span></div>
+            <div class="module"><span class="name">Information Disclosure</span><span class="count">5 rules</span></div>
+            <div class="module"><span class="name">Redirects</span><span class="count">3 rules</span></div>
+          </div>
+          <p class="modules-foot">
+            Plus scan history, production-vs-staging compare with regression detection, batch
+            scanning, JSON/Markdown/HTML reports, a full DevTools panel — and every rule is
+            individually toggleable.
+          </p>
+        </div>
+      </section>
+
+      <section id="screenshots">
+        <div class="container">
+          <h2 class="section-title">The product</h2>
+          <p class="section-lede">
+            Captured from the real extension — the popup, the explanation you get when you expand
+            a finding, and the full dashboard.
+          </p>
+          <div class="shots">
+            <a class="shot" href="./assets/screenshots/popup-dark.png" target="_blank" rel="noopener">
+              <img src="./assets/screenshots/popup-dark.png" alt="Klynto popup: posture score, module tiles and regression banner" loading="lazy" />
+            </a>
+            <a class="shot" href="./assets/screenshots/finding-dark.png" target="_blank" rel="noopener">
+              <img src="./assets/screenshots/finding-dark.png" alt="Expanded finding with explanation, impact, recommendation and Fix Center" loading="lazy" />
+            </a>
+            <a class="shot shot-wide" href="./assets/screenshots/dashboard-dark.png" target="_blank" rel="noopener">
+              <img src="./assets/screenshots/dashboard-dark.png" alt="Dashboard with per-module score breakdown and findings" loading="lazy" />
+            </a>
+            <a class="shot shot-wide" href="./assets/screenshots/compare-dark.png" target="_blank" rel="noopener">
+              <img src="./assets/screenshots/compare-dark.png" alt="Compare view diffing two scans with regression and improvement markers" loading="lazy" />
+            </a>
+          </div>
+          <div class="shots shots-light">
+            <div class="shots">
+              <a class="shot" href="./assets/screenshots/popup-light.png" target="_blank" rel="noopener">
+                <img src="./assets/screenshots/popup-light.png" alt="Klynto popup in the light theme" loading="lazy" />
+              </a>
+              <a class="shot" href="./assets/screenshots/dashboard-light.png" target="_blank" rel="noopener">
+                <img src="./assets/screenshots/dashboard-light.png" alt="Klynto dashboard in the light theme" loading="lazy" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="privacy">
+        <div class="container">
+          <h2 class="section-title">Privacy, for real</h2>
+          <p class="section-lede">
+            Klynto is local-first — and so is this website. There is no Klynto server, no
+            account, and nothing to opt out of.
+          </p>
+          <div class="privacy-card">
+            <ul>
+              <li><strong>All analysis is local.</strong> Everything runs in your browser; results never leave your machine.</li>
+              <li><strong>Per-site permissions.</strong> Klynto asks before inspecting a domain — never “read all your data on all websites” — and you can revoke any time.</li>
+              <li><strong>Observation only.</strong> Klynto never modifies requests, never injects scripts, never phones home.</li>
+              <li><strong>This website collects nothing.</strong> No cookies, no analytics, no trackers, no JavaScript.</li>
+            </ul>
+          </div>
+          <p class="privacy-more">
+            Read the full <a href="./privacy.html">privacy policy</a> — the same document used
+            for the store listings.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span class="muted">© 2026 Klynto · MIT License</span>
+        <span class="faint">This website collects nothing.</span>
+        <span class="links">
+          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">Source</a>
+          <a href="./privacy.html">Privacy</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
