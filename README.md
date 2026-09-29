@@ -87,7 +87,7 @@ The store listings are pending review — the fastest way to run Klynto today is
 source. Works in any Chromium browser (Chrome, Edge, Brave, Opera, Vivaldi):
 
 ```bash
-git clone https://github.com/uzair-arif/KLYNTO.git
+git clone https://github.com/uzairr-arif/KLYNTO.git
 cd KLYNTO
 npm install
 npm run build

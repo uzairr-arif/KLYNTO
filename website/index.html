@@ -20,11 +20,12 @@
   </head>
   <body>
     <!--
-      STORE LINKS: the buttons below point to the store homepages until the
-      listings are approved. Replace each href with the real item URL, e.g.
-      https://chromewebstore.google.com/detail/<id>
-      https://microsoftedge.microsoft.com/addons/detail/<id>
-      https://addons.mozilla.org/firefox/addon/<slug>
+      STORE LINKS: the extension is pending store review, so the buttons below
+      are rendered as "coming soon" states. When the listings are approved,
+      replace each <span> with a real link:
+      <a class="btn-store" href="https://chromewebstore.google.com/detail/<id>">Add to Chrome</a>
+      <a class="btn-store" href="https://microsoftedge.microsoft.com/addons/detail/<id>">Add to Edge</a>
+      <a class="btn-ghost" href="https://addons.mozilla.org/firefox/addon/<slug>">Firefox Add-ons</a>
     -->
     <header class="site-header">
       <div class="container header-inner">
@@ -36,7 +37,7 @@
           <a href="#features">Features</a>
           <a href="#screenshots">Screenshots</a>
           <a href="#privacy">Privacy</a>
-          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/uzairr-arif/KLYNTO" target="_blank" rel="noopener">GitHub</a>
         </nav>
       </div>
     </header>
@@ -52,11 +53,11 @@
           a fix for your stack. All analysis runs in your browser.
         </p>
         <div class="cta-row">
-          <a class="btn-store" href="https://chromewebstore.google.com/">Add to Chrome</a>
-          <a class="btn-store" href="https://microsoftedge.microsoft.com/addons">Add to Edge</a>
-          <a class="btn-ghost" href="https://addons.mozilla.org/">Firefox Add-ons</a>
+          <span class="btn-store is-soon">Add to Chrome <em class="soon">soon</em></span>
+          <span class="btn-store is-soon">Add to Edge <em class="soon">soon</em></span>
+          <span class="btn-ghost is-soon">Firefox Add-ons <em class="soon">soon</em></span>
         </div>
-        <p class="promise">Free &amp; open source (MIT) · Works in Chrome, Edge, Brave and other Chromium browsers</p>
+        <p class="promise">In store review now &middot; or build it yourself from the GitHub repo &middot; MIT licensed</p>
         <div class="badge-row">
           <span class="pill">60 rules</span>
           <span class="pill">8 modules</span>
@@ -178,7 +179,7 @@
         <span class="muted">© 2026 Klynto · MIT License</span>
         <span class="faint">This website collects nothing.</span>
         <span class="links">
-          <a href="https://github.com/uzair-arif/KLYNTO" target="_blank" rel="noopener">Source</a>
+          <a href="https://github.com/uzairr-arif/KLYNTO" target="_blank" rel="noopener">Source</a>
           <a href="./privacy.html">Privacy</a>
         </span>
       </div>

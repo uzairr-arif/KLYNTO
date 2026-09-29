@@ -200,6 +200,34 @@ a {
   border-color: #3b82f6;
 }
 
+/* "Coming soon" store state - pending review */
+.btn-store.is-soon,
+.btn-ghost.is-soon {
+  cursor: default;
+  opacity: 0.65;
+  background: transparent;
+  color: inherit;
+  border: 1px dashed #2a3342;
+  filter: none;
+  transform: none;
+}
+
+.btn-store.is-soon:hover,
+.btn-ghost.is-soon:hover {
+  transform: none;
+  border-color: #2a3342;
+}
+
+.is-soon .soon {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  margin-left: 6px;
+}
+
 .hero .promise {
   margin-top: 18px;
   font-size: 13px;
