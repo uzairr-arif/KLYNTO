@@ -47,12 +47,15 @@ jobs:
           node -e "
             const m = require('./dist/manifest.json');
             const fs = require('fs');
-            const entries = [m.action.default_popup, m.options_page, m.devtools_page, ...(m.background.scripts || []), ...Object.values(m.icons)];
+            const entries = [m.action.default_popup, m.options_ui && m.options_ui.page, m.devtools_page, ...(m.background.scripts || []), ...Object.values(m.icons)];
             for (const key of entries) {
               if (!key || !fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
             }
             if (!Array.isArray(m.background.scripts) || m.background.scripts.length === 0) {
               throw new Error('firefox manifest is missing background scripts');
+            }
+            if (!m.options_ui || m.options_page) {
+              throw new Error('firefox manifest must use options_ui, not options_page');
             }
             console.log('firefox manifest OK:', m.name, m.version);
           "
