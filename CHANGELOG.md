@@ -4,7 +4,7 @@ All notable changes to Klynto are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-09-19
+## [1.0.0] - 2026-09-29
 
 First public release. Inspect. Understand. Fix.
 
@@ -41,3 +41,20 @@ First public release. Inspect. Understand. Fix.
 - **Local-first privacy** - per-site optional permissions, no host access at install,
   no telemetry, no servers
 - **CI** - GitHub Actions: typecheck, lint, tests, build, release packaging
+- **Product website** - static landing page with privacy policy, deployable to
+  GitHub Pages or Vercel; zero JavaScript, zero tracking
+
+### Fixed
+
+- Duplicate rows in the dashboard Site access list (each granted host appeared once
+  per permission pattern instead of once per host)
+- Compare view classified rules evaluated on only one side of a diff as
+  improvements/regressions; such rows are now a neutral "changed"
+- Watch mode no longer wipes `dist/` between rebuilds, which previously disabled
+  the unpacked extension in Chrome
+- CI verifies and packages each browser target immediately after its own build
+
+### Security
+
+- Updated development dependencies to patched versions (sharp, vitest, glob);
+  none are bundled in the shipped extension
