@@ -14,3 +14,7 @@ coverage/
 demo-dist/
 /demo/
 /vite.demo.config.ts
+
+# Local-only: launch video render output (frames, audio, scripts)
+/brag-output/
+/brag-output-*/
