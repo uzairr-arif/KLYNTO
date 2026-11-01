@@ -50,6 +50,7 @@ function buildManifest(targetName) {
     options_page: 'options.html',
     devtools_page: 'devtools.html',
     permissions: ['storage', 'webRequest', 'activeTab', 'contextMenus'],
+    // Chromium-only key; the firefox branch swaps it for optional_permissions.
     optional_host_permissions: ['http://*/*', 'https://*/*'],
     commands: {
       _execute_action: {
@@ -63,19 +64,30 @@ function buildManifest(targetName) {
   };
 
   if (targetName === 'firefox') {
-    // Experimental Firefox target (MV3 event page instead of service worker).
+    // Firefox target (MV3 event page instead of service worker).
     // - background.scripts without `type: 'module'`: the Firefox build bundles
     //   the worker as an IIFE classic script (see vite.sw.config.ts).
     // - options_ui: Firefox's supported options-page key.
-    // - strict_min_version 128: optional_host_permissions + storage.session era.
-    const sharedWithoutOptionsPage = { ...shared };
-    delete sharedWithoutOptionsPage.options_page;
+    // - optional_permissions (NOT optional_host_permissions): Firefox manages
+    //   host grants per-extension in about:addons and does not support the
+    //   Chromium optional_host_permissions key.
+    // - gecko.id: stable GUID (AMO requires an id or AMO-generated identity;
+    //   a GUID avoids exposing a domain or personal address).
+    // - data_collection_permissions: Klynto collects nothing; declaring it
+    //   explicitly is what AMO's newest review flow expects.
+    // - strict_min_version 128: storage.session + MV3 event-page era.
+    const { optional_host_permissions: _ohp, options_page: _op, ...firefoxShared } = shared;
+    void _ohp;
+    void _op;
     return {
-      ...sharedWithoutOptionsPage,
+      ...firefoxShared,
       browser_specific_settings: {
         gecko: {
-          id: 'klynto@klynto.dev',
+          id: '{b7c83b64-f682-4767-9b16-0ad4aa899164}',
           strict_min_version: '128.0',
+          data_collection_permissions: {
+            required: ['none'],
+          },
         },
       },
       background: {
@@ -85,7 +97,7 @@ function buildManifest(targetName) {
         page: 'options.html',
         open_in_tab: true,
       },
-      optional_host_permissions: ['http://*/*', 'https://*/*'],
+      optional_permissions: ['http://*/*', 'https://*/*'],
     };
   }
 
