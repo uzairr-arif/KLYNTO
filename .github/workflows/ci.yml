@@ -56,9 +56,12 @@ jobs:
       - name: Package chrome ZIP
         run: npm run package -- --target chrome
 
-      # Firefox: build → verify → package (dist holds the firefox manifest here)
+      # Firefox: build → web-ext lint → verify → package (dist holds the firefox manifest here)
       - name: Build (firefox, experimental)
         run: npm run build:firefox
+
+      - name: Lint firefox build (web-ext)
+        run: npm run lint:firefox
 
       - name: Verify firefox manifest + entries exist
         run: |

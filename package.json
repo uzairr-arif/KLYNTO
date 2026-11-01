@@ -14,6 +14,7 @@
     "watch": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "lint:firefox": "node node_modules/web-ext/bin/web-ext.js lint --source-dir dist",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
@@ -42,6 +43,7 @@
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.35.0",
     "vite": "^7.3.7",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.12",
+    "web-ext": "^10.8.0"
   }
 }
