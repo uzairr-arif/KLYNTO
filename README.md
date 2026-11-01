@@ -99,6 +99,23 @@ npm run build
 
 `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) opens Klynto.
 
+### Firefox (experimental)
+
+Klynto also builds for Firefox (128+) from the same source, with host permissions
+managed in `about:addons` instead of per-site prompts:
+
+```bash
+npm run build:firefox
+```
+
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on...** and select `dist/manifest.json`
+
+Temporary loads are removed when Firefox exits — for a persistent install, use a
+signed build from Firefox Add-ons (pending review) or Firefox Developer Edition with
+`xpinstall.signatures.required` disabled. Grant site access under
+`about:addons` → Klynto → **Permissions**.
+
 ### Browser stores (pending review)
 
 Klynto will be published on the Chrome Web Store, Edge Add-ons and Firefox Add-ons.

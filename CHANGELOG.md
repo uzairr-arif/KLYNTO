@@ -4,6 +4,36 @@ All notable changes to Klynto are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Firefox is now a first-class target (milestone v0.4 polish):
+  - A namespace compatibility shim (`platform/namespace.ts`) aliases the
+    promise-based `browser.*` API onto `chrome.*` on Firefox, so every surface
+    (popup, dashboard, options, DevTools, background) works unchanged on both
+    engines; `browserApi.isChromium()` no longer misreports Firefox.
+  - The Firefox manifest carries a stable `browser_specific_settings.gecko.id`
+    (GUID), `data_collection_permissions: none`, and `optional_permissions` for
+    host patterns (Chromium's `optional_host_permissions` key is not supported
+    on Firefox).
+  - `web-ext` linting (`npm run lint:firefox`) gates the Firefox build locally
+    and in CI - the package must lint with zero errors before it ships.
+
+### Fixed
+
+- The passive network monitor no longer references the Chromium-only
+  `webRequest.On*Options` enum constants; on Firefox that could leave the
+  listener registered without response headers (losing cookie, CORS and CSP
+  evidence). The extraInfoSpec is now built per engine: `extraHeaders` only on
+  Chromium, raw strings everywhere.
+- `contextMenus.removeAll()` is called in promise form (the callback signature
+  is not honoured through the Firefox namespace shim).
+- The DevTools panel registration handles both the Chromium callback form and
+  the Firefox promise form of `devtools.panels.create`.
+- `grantedHosts()` degrades to an empty grant list when
+  `permissions.getAll()` is unavailable instead of rejecting.
+
 ## [1.0.0] - 2026-09-29
 
 First public release. Inspect. Understand. Fix.
