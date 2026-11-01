@@ -7,6 +7,7 @@ import type {
 } from '../core/models';
 import { buildTarget } from '../core/parser/urls';
 import { SESSION_KEYS } from '../shared/constants';
+import { browserApi } from '../platform/browser';
 
 /** Cap sizes so a busy tab cannot grow the session store without bound. */
 const MAX_REQUESTS = 150;
@@ -35,6 +36,23 @@ function headerList(
     .map((h) => ({ name: h.name, value: h.value as string }));
 }
 
+/**
+ * extraInfoSpec per engine, as raw strings (raw strings are valid on both
+ * engines; the On*Options enum constants are not shipped by Firefox).
+ *
+ * Chromium hides Set-Cookie behind 'extraHeaders', so it is required there.
+ * Firefox rejects that value (listener registration fails) but exposes
+ * Set-Cookie to host-permission grants by default, so it must be omitted.
+ */
+export function webRequestExtraInfoSpec(firefox: boolean): {
+  redirect: string[];
+  completed: string[];
+} {
+  return firefox
+    ? { redirect: ['responseHeaders'], completed: ['responseHeaders'] }
+    : { redirect: ['responseHeaders', 'extraHeaders'], completed: ['responseHeaders', 'extraHeaders'] };
+}
+
 function corsOf(headers: Array<{ name: string; value: string }>): NetworkRequestSummary['cors'] {
   let allowOrigin: string | undefined;
   let credentials: boolean | undefined;
@@ -60,28 +78,19 @@ export class NetworkMonitor {
 
   start(): void {
     const filter = { urls: ['http://*/*', 'https://*/*'] };
-    // 'extraHeaders' is required in MV3 (Chromium) to observe Set-Cookie.
-    // Some Firefox versions reject unknown extraInfoSpec values, so listener
-    // registration degrades gracefully to plain response headers.
-    const redirectSpec: chrome.webRequest.OnBeforeRedirectOptions[] = [
-      chrome.webRequest.OnBeforeRedirectOptions.RESPONSE_HEADERS,
-      chrome.webRequest.OnBeforeRedirectOptions.EXTRA_HEADERS,
-    ];
-    const completedSpec: chrome.webRequest.OnCompletedOptions[] = [
-      chrome.webRequest.OnCompletedOptions.RESPONSE_HEADERS,
-      chrome.webRequest.OnCompletedOptions.EXTRA_HEADERS,
-    ];
+    const firefox = browserApi.isFirefox();
+    const spec = webRequestExtraInfoSpec(firefox);
 
     try {
       chrome.webRequest.onBeforeRedirect.addListener(
         (details) => this.handleBeforeRedirect(details),
         filter,
-        redirectSpec,
+        spec.redirect as chrome.webRequest.OnBeforeRedirectOptions[],
       );
       chrome.webRequest.onCompleted.addListener(
         (details) => this.handleCompleted(details),
         filter,
-        completedSpec,
+        spec.completed as chrome.webRequest.OnCompletedOptions[],
       );
     } catch {
       chrome.webRequest.onBeforeRedirect.addListener(
