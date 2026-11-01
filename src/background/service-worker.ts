@@ -1,3 +1,4 @@
+import '../platform/namespace';
 import { CONTEXT_MENU_ID } from '../shared/constants';
 import { registerMessageRouter } from './message-router';
 import { NetworkMonitor } from './network-monitor';
@@ -13,13 +14,18 @@ const tabManager = new TabManager(monitor);
 // --- Context menu ----------------------------------------------------------
 
 chrome.runtime.onInstalled.addListener((details) => {
-  chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
-      id: CONTEXT_MENU_ID,
-      title: 'Inspect security with Klynto',
-      contexts: ['page', 'frame'],
+  // Promise form (the namespace shim maps chrome to browser on Firefox, where
+  // the callback signature is not honoured).
+  void chrome.contextMenus
+    .removeAll()
+    .catch(() => undefined)
+    .then(() => {
+      chrome.contextMenus.create({
+        id: CONTEXT_MENU_ID,
+        title: 'Inspect security with Klynto',
+        contexts: ['page', 'frame'],
+      });
     });
-  });
   if (details.reason === 'install') {
     void browserApi.openExtensionPage('dashboard.html', 'welcome');
   }

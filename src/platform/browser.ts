@@ -1,11 +1,13 @@
 /**
  * Platform adapter.
  *
- * All chrome.* usage in Klynto is meant to flow through this module so a
- * Firefox (browser.*) port only needs to touch this layer. For the Chromium
- * release the raw chrome namespace is used directly; the Firefox adapter is
- * wired but minimal (background scripts instead of service workers are the
- * main difference, handled by the build manifest generator).
+ * Klynto calls the extension APIs promise-style through the `chrome`
+ * namespace. On Firefox, `platform/namespace.ts` (imported first by every
+ * entry) aliases that namespace onto the promise-based `browser.*`, so the
+ * same code runs unchanged on both engines. This module keeps the shared
+ * helpers (storage bindings, tabs, permissions, badge) and the browser
+ * detection used to branch engine-specific behaviour such as host-permission
+ * management and the webRequest extraInfoSpec.
  */
 
 import type { KVStore } from '../core/storage/storage';
@@ -40,6 +42,11 @@ function kvFromArea(area: StorageAreaLike): KVStore {
   };
 }
 
+/** Firefox exposes the promise-based `browser` global; Chromium does not. */
+function hasBrowserNamespace(): boolean {
+  return typeof (globalThis as { browser?: unknown }).browser !== 'undefined';
+}
+
 /** Firefox does not ship chrome.storage.session in all versions; degrade to an
  *  in-memory KV so live per-tab evidence simply resets when the worker sleeps. */
 function memoryKv(): KVStore {
@@ -59,7 +66,9 @@ function memoryKv(): KVStore {
 
 export const browserApi = {
   isChromium(): boolean {
-    return typeof chrome !== 'undefined' && !!chrome.runtime?.id;
+    // Firefox also defines chrome.runtime.id (callback-only namespace), so the
+    // presence of the promise-based `browser` global is the real tell.
+    return typeof chrome !== 'undefined' && !!chrome.runtime?.id && !hasBrowserNamespace();
   },
 
   isFirefox(): boolean {
@@ -153,8 +162,14 @@ export const browserApi = {
   },
 
   async grantedHosts(): Promise<string[]> {
-    const grants = await chrome.permissions.getAll();
-    return (grants.origins ?? []) as string[];
+    try {
+      const grants = await chrome.permissions.getAll();
+      return (grants.origins ?? []) as string[];
+    } catch {
+      // permissions.getAll is unavailable in some runtimes - report no grants
+      // so the UI offers the enable flow (which itself degrades gracefully).
+      return [];
+    }
   },
 
   /** Show a short-lived badge on the toolbar icon. */
