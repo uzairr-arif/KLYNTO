@@ -95,7 +95,10 @@ npm run build
 
 1. Open `chrome://extensions`
 2. Enable **Developer mode**
-3. Click **Load unpacked** and select the `dist/` folder
+3. Click **Load unpacked** and select the `dist/chrome` folder
+
+Each target builds into its own folder (`dist/chrome`, `dist/firefox`) - always
+load the one matching your browser.
 
 `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) opens Klynto.
 
@@ -109,7 +112,7 @@ npm run build:firefox
 ```
 
 1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on...** and select `dist/manifest.json`
+2. Click **Load Temporary Add-on...** and select `dist/firefox/manifest.json`
 
 Temporary loads are removed when Firefox exits — for a persistent install, use a
 signed build from Firefox Add-ons (pending review) or Firefox Developer Edition with

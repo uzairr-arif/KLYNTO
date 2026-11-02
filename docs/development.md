@@ -11,19 +11,20 @@
 | --------------------------------- | --------------------------------------------------------- |
 | `npm install`                     | Install dependencies                                      |
 | `npm run watch`                   | Build once, then rebuild pages + service worker on change |
-| `npm run build`                   | Production build into `dist/` (Chrome target)             |
-| `npm run build:firefox`           | Build the experimental Firefox target                     |
+| `npm run build`                   | Production build into `dist/chrome` (Chrome target)       |
+| `npm run build:firefox`           | Build the Firefox target into `dist/firefox`              |
 | `npm run typecheck`               | Strict TypeScript check (`tsc --noEmit`)                  |
 | `npm run lint`                    | ESLint                                                    |
+| `npm run lint:firefox`            | web-ext lint of the Firefox build (0 errors required)     |
 | `npm test` / `npm run test:watch` | Vitest suite                                              |
 | `npm run icons`                   | Regenerate PNG icons from the SVG mark (needs `sharp`)    |
-| `npm run package`                 | ZIP `dist/` into `releases/` (store-ready)                |
+| `npm run package`                 | ZIP the built target into `releases/` (store-ready)       |
 | `npm run release`                 | Build + package                                           |
 
 ## Load the extension
 
 1. `chrome://extensions` → enable **Developer mode**
-2. **Load unpacked** → select the `dist/` folder
+2. **Load unpacked** → select the `dist/chrome` folder (Firefox: `dist/firefox`)
 3. After rebuilding, click the reload icon on the Klynto card
 
 To test the background service worker logs: click **service worker** on the extension

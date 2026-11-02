@@ -3,13 +3,15 @@
  * Klynto build orchestrator.
  *
  * Pass 1 builds all extension pages (popup, dashboard, options, devtools,
- * panel). Pass 2 builds the MV3 service worker as a single self-contained
- * ESM file. Finally the per-target manifest is written into dist/.
+ * panel). Pass 2 builds the MV3 background worker as a single self-contained
+ * file. Finally the per-target manifest is written into the target's output
+ * directory: dist/chrome or dist/firefox (each target gets its own folder, so
+ * the right build is always loaded into the right browser).
  *
  * Usage: node scripts/build.mjs [--target chrome|firefox] [--watch]
  */
 import { spawnSync, spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
@@ -26,6 +28,26 @@ if (target !== 'chrome' && target !== 'firefox') {
 }
 
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
+const dist = resolve(root, 'dist', target);
+
+/**
+ * One-time migration: the pre-split layout wrote both targets into dist/
+ * directly, which made it easy to load the wrong target into the wrong
+ * browser. Remove legacy root files (everything except the per-target dirs).
+ */
+function cleanLegacyDist() {
+  const distRoot = resolve(root, 'dist');
+  if (!existsSync(resolve(distRoot, 'manifest.json'))) return;
+  for (const entry of readdirSync(distRoot)) {
+    if (entry === 'chrome' || entry === 'firefox') continue;
+    try {
+      rmSync(resolve(distRoot, entry), { recursive: true, force: true });
+    } catch {
+      // transient Windows file lock - the next build can clean it up
+    }
+  }
+  console.log('[klynto] removed legacy dist/ root layout (targets now live in dist/chrome and dist/firefox)');
+}
 
 function buildManifest(targetName) {
   const icons = {
@@ -122,21 +144,28 @@ function runVite(configArgs, extraArgs = []) {
   }
 }
 
-const dist = resolve(root, 'dist');
+cleanLegacyDist();
 if (!existsSync(dist)) mkdirSync(dist, { recursive: true });
 
-// Always have a manifest in dist (watch mode rebuilds overwrite pages/SW but
-// never clean the folder again after pass 1).
+// Always have a manifest in the target dir (watch mode rebuilds overwrite
+// pages/SW but never clean the folder again after pass 1).
 writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
 
 if (watch) {
   // Watch mode: do one full clean build first (which writes a valid manifest),
   // then start the watchers with emptyOutDir disabled so rebuilds never wipe
-  // dist/ — Chrome would disable the unpacked extension if the manifest
-  // vanished between rebuilds.
+  // the target dir — Chrome would disable the unpacked extension if the
+  // manifest vanished between rebuilds.
   console.log('[klynto] watch: initial clean build…');
-  runVite(['--config', 'vite.config.ts']);
-  runVite(['--config', 'vite.sw.config.ts', '--mode', target === 'firefox' ? 'firefox' : 'production']);
+  runVite(['--config', 'vite.config.ts', '--outDir', `dist/${target}`]);
+  runVite([
+    '--config',
+    'vite.sw.config.ts',
+    '--mode',
+    target === 'firefox' ? 'firefox' : 'production',
+    '--outDir',
+    `dist/${target}/background`,
+  ]);
   writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
   console.log('[klynto] watch mode: rebuilding on change (dist is not wiped between rebuilds)');
   spawn(
@@ -147,6 +176,8 @@ if (watch) {
       '--watch',
       '--mode',
       'watch',
+      '--outDir',
+      `dist/${target}`,
       '--config',
       'vite.config.ts',
     ],
@@ -160,6 +191,8 @@ if (watch) {
       '--watch',
       '--mode',
       target === 'firefox' ? 'firefox' : 'watch',
+      '--outDir',
+      `dist/${target}/background`,
       '--config',
       'vite.sw.config.ts',
     ],
@@ -167,9 +200,16 @@ if (watch) {
   );
 } else {
   console.log('[klynto] building pages…');
-  runVite(['--config', 'vite.config.ts']);
+  runVite(['--config', 'vite.config.ts', '--outDir', `dist/${target}`]);
   console.log('[klynto] building service worker…');
-  runVite(['--config', 'vite.sw.config.ts', '--mode', target === 'firefox' ? 'firefox' : 'production']);
+  runVite([
+    '--config',
+    'vite.sw.config.ts',
+    '--mode',
+    target === 'firefox' ? 'firefox' : 'production',
+    '--outDir',
+    `dist/${target}/background`,
+  ]);
   writeFileSync(resolve(dist, 'manifest.json'), JSON.stringify(buildManifest(target), null, 2));
-  console.log(`[klynto] done → dist/ (target: ${target}, v${pkg.version})`);
+  console.log(`[klynto] done → dist/${target} (target: ${target}, v${pkg.version})`);
 }

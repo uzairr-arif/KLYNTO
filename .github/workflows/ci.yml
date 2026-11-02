@@ -28,14 +28,14 @@ jobs:
       - name: Unit tests
         run: npm test
 
-      # Chrome: build → verify → package (dist holds the chrome manifest here)
+      # Chrome: build → verify → package (dist/chrome holds the chrome manifest)
       - name: Build (chrome)
         run: npm run build:chrome
 
       - name: Verify chrome manifest + entries exist
         run: |
           node -e "
-            const m = require('./dist/manifest.json');
+            const m = require('./dist/chrome/manifest.json');
             const fs = require('fs');
             const entries = [
               m.action.default_popup,
@@ -45,7 +45,7 @@ jobs:
               ...Object.values(m.icons),
             ];
             for (const key of entries) {
-              if (!key || !fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
+              if (!key || !fs.existsSync('dist/chrome/' + key)) throw new Error('missing dist/chrome/' + key);
             }
             if (m.background.service_worker !== 'background/service-worker.js') {
               throw new Error('chrome manifest is missing the service worker entry');
@@ -56,7 +56,7 @@ jobs:
       - name: Package chrome ZIP
         run: npm run package -- --target chrome
 
-      # Firefox: build → web-ext lint → verify → package (dist holds the firefox manifest here)
+      # Firefox: build → web-ext lint → verify → package (dist/firefox holds the firefox manifest)
       - name: Build (firefox, experimental)
         run: npm run build:firefox
 
@@ -66,7 +66,7 @@ jobs:
       - name: Verify firefox manifest + entries exist
         run: |
           node -e "
-            const m = require('./dist/manifest.json');
+            const m = require('./dist/firefox/manifest.json');
             const fs = require('fs');
             const entries = [
               m.action.default_popup,
@@ -76,7 +76,7 @@ jobs:
               ...Object.values(m.icons),
             ];
             for (const key of entries) {
-              if (!key || !fs.existsSync('dist/' + key)) throw new Error('missing dist/' + key);
+              if (!key || !fs.existsSync('dist/firefox/' + key)) throw new Error('missing dist/firefox/' + key);
             }
             if (!Array.isArray(m.background.scripts) || m.background.scripts.length === 0) {
               throw new Error('firefox manifest is missing background scripts');

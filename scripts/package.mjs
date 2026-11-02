@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * Package dist/ into a store-ready ZIP (manifest.json at the ZIP root, as the
- * Chrome Web Store and Edge Add-ons require).
+ * Package a built target into a store-ready ZIP (manifest.json at the ZIP
+ * root, as the Chrome Web Store, Edge Add-ons and AMO require).
  *
- * Usage: node scripts/package.mjs [--target chrome] [--out releases]
+ * Usage: node scripts/package.mjs [--target chrome|firefox] [--out releases]
  */
 import archiver from 'archiver';
 import { createWriteStream, existsSync, mkdirSync, readFileSync } from 'node:fs';
@@ -18,10 +18,10 @@ const target = targetFlag >= 0 ? args[targetFlag + 1] : 'chrome';
 const outDir = resolve(root, 'releases');
 
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
-const dist = resolve(root, 'dist');
+const dist = resolve(root, 'dist', target);
 
 if (!existsSync(resolve(dist, 'manifest.json'))) {
-  console.error('dist/manifest.json not found - run `npm run build` first.');
+  console.error(`dist/${target}/manifest.json not found - run \`npm run build:${target}\` first.`);
   process.exit(1);
 }
 
@@ -36,7 +36,7 @@ await new Promise((done, fail) => {
   output.on('close', done);
   archive.on('error', fail);
   archive.pipe(output);
-  // Contents of dist at the ZIP root - NOT the dist folder itself.
+  // Contents of the target dir at the ZIP root - NOT the folder itself.
   archive.directory(dist, false);
   void archive.finalize();
 });

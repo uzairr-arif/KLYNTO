@@ -7,6 +7,14 @@
   "engines": {
     "node": ">=20.19.0"
   },
+  "overrides": {
+    "archiver-utils": {
+      "glob": "^14.0.3"
+    },
+    "readdir-glob": {
+      "minimatch": "^11.0.4"
+    }
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:chrome": "node scripts/build.mjs --target chrome",
@@ -14,7 +22,7 @@
     "watch": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "lint:firefox": "node node_modules/web-ext/bin/web-ext.js lint --source-dir dist",
+    "lint:firefox": "node node_modules/web-ext/bin/web-ext.js lint --source-dir dist/firefox",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
